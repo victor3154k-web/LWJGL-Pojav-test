@@ -12,22 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        distribution: temurin
-        java-version: 8
+        distribution: 'temurin'
+        java-version: '8'
 
     - name: Build for Android ${{matrix.arch}}
       run: |
-        export JAVA8_HOME=$JAVA_HOME_8_${{runner.arch}}
+        export JAVA8_HOME=$JAVA_HOME
         export LWJGL_BUILD_ARCH=${{matrix.arch}}
+        chmod +x ci_build_android.bash
         bash ci_build_android.bash
 
     - name: Upload modules release output
-      if: ${{matrix.arch == 'arm64'}} # Only upload this once
+      if: ${{matrix.arch == 'arm64'}}
       uses: actions/upload-artifact@v4
       with:
         name: lwjgl3-android-modules
